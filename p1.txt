@@ -1,0 +1,19 @@
+Program
+go
+declare int a
+a = 3
+declare int b
+b = 2
+declare int c
+c = 1
+decide a < b then do
+decide b < c then do
+write c
+else do
+write b
+else do
+decide a < c then do
+write c
+else do
+write a
+halt
