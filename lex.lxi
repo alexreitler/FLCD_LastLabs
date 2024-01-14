@@ -13,7 +13,7 @@ STRING_CONST	[\"].*[\"]
 CHAR_CONST		[\'][a-zA-Z0-9 ][\']
 %%
 
-"cha"|"const"|"do"|"else"|"if"|"int"|"of"|"program"|"read"|"then"|"var"|"while"|"write"|"repeat"|"until"|"decide"|"then"|"or"|"this"|"is"|"good"|"that"|"until"|"this"|"tells"|"you"|"to"|"stop"|"start"|"working"|"with"|"from"|"going"|"up"|"down"|"go"|"halt"|"declare"|"int"|"char"|"String"		{printf("Reserved word: %s\n", yytext);}
+"char"|"const"|"do"|"else"|"if"|"int"|"of"|"Program"|"read"|"then"|"var"|"while"|"write"|"repeat"|"until"|"decide"|"then"|"or"|"this"|"is"|"good"|"that"|"until"|"this"|"tells"|"you"|"to"|"stop"|"start"|"working"|"with"|"from"|"going"|"up"|"down"|"go"|"halt"|"declare"|"int"|"char"|"String"		{printf("Reserved word: %s\n", yytext);}
 "+"|"-"|"*"|"/"|"%"|"<="|">="|"=="|"!="|"<"|">"|"="		{printf("Operator: %s\n", yytext);}
 "{"|"}"|"("|")"|"["|"]"|":"|";"|","|"'"|"\""		{printf("Separator: %s\n", yytext);}
 {IDENTIFIER}		{printf("Identifier: %s\n", yytext);}
