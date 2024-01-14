@@ -110,15 +110,15 @@ Type :    INT {printf("Type -> int\n");}
 	|	CHAR {printf("Type -> char\n");}
       ;
 
-IfStatement : DECIDE Relation THEN DO CompoundStatement {printf("IfStatement -> decide Relation then do CompoundStatement\n");}
-	| DECIDE Relation THEN DO CompoundStatement ELSE DO CompoundStatement {printf("IfStatement -> decide Relation then do CompoundStatement else do CompoundStatement");}
+IfStatement : DECIDE Relation THEN DO Statement {printf("IfStatement -> decide Relation then do CompoundStatement\n");}
+	| DECIDE Relation THEN DO Statement ELSE DO Statement {printf("IfStatement -> decide Relation then do CompoundStatement else do CompoundStatement");}
 	;
 
-WhileStatement : WHILE THIS IS GOOD Relation DO THAT CompoundStatement {printf("WhileStatement -> while this is good Relation do that CompoundStatement\n");};
+WhileStatement : WHILE THIS IS GOOD Relation DO THAT Statement {printf("WhileStatement -> while this is good Relation do that CompoundStatement\n");};
 
-RepeatStatement : DO THIS CompoundStatement UNTIL THIS TELLS YOU TO STOP Relation {printf("RepeatStatement -> do this until this tells you to stop CompoundStatement\n");};
+RepeatStatement : DO THIS Statement UNTIL THIS TELLS YOU TO STOP Relation {printf("RepeatStatement -> do this until this tells you to stop CompoundStatement\n");};
 
-ForStatement : START WORKING WITH THIS IDENTIFIER FROM THIS WorkingVariable TO THIS WorkingVariable GOING Direction CompoundStatement {printf("ForStatement -> Start working with this IDENTIFIER from this WorkingVariable to this WorkingVariable going Direction CompoundStatement\n");};
+ForStatement : START WORKING WITH THIS IDENTIFIER FROM THIS WorkingVariable TO THIS WorkingVariable GOING Direction Statement {printf("ForStatement -> Start working with this IDENTIFIER from this WorkingVariable to this WorkingVariable going Direction CompoundStatement\n");};
 
 WorkingVariable : IDENTIFIER {printf("WorkingVariable -> IDENTIFIER\n");}
 	|	INTCONSTANT {printf("WorkingVariable -> INTCONSTANT\n");}
