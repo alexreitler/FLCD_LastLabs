@@ -1,0 +1,10 @@
+Program
+go
+declare int a
+declare int b
+readNumber a
+readNumber b
+while this is good a != b do that
+decide a > b then do a = a - b else do b = b - a
+write a
+halt
