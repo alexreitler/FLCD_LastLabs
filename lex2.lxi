@@ -1,0 +1,89 @@
+%{ 	 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "y.tab.h"
+int currentLine = 1;
+%} 
+%option noyywrap
+%option caseless
+
+IDENTIFIER		[a-zA-Z][a-zA-Z0-9_]*
+NUMBER_CONST	0|[+|-]?[1-9][0-9]*([.][0-9]*)?|[+|-]?0[.][0-9]*
+STRING_CONST	[\"].*[\"]
+CHAR_CONST		[\'][a-zA-Z0-9 ][\']
+%%
+
+
+"Program" { printf("%s - reserved word\n", yytext); return PROGRAM; }
+"int" { printf("%s - reserved word\n", yytext); return INT; }
+"String" { printf("%s - reserved word\n", yytext); return STRING; }
+"char" { printf("%s - reserved word\n", yytext); return CHAR; }
+"if" { printf("%s - reserved word\n", yytext); return IF; }
+"else" { printf("%s - reserved word\n", yytext); return ELSE; }
+"while" { printf("%s - reserved word\n", yytext); return WHILE; }
+"const" { printf("%s - reserved word\n", yytext); return CONST; }
+"do" { printf("%s - reserved word\n", yytext); return DO; }
+"of" { printf("%s - reserved word\n", yytext); return OF; }
+"read" { printf("%s - reserved word\n", yytext); return READ; }
+"readNumber" { printf("%s - reserved word\n", yytext); return READNUMBER; }
+"then" { printf("%s - reserved word\n", yytext); return THEN; }
+"var" { printf("%s - reserved word\n", yytext); return VAR; }
+"write" { printf("%s - reserved word\n", yytext); return WRITE; }
+"repeat" { printf("%s - reserved word\n", yytext); return REPEAT; }
+"until" { printf("%s - reserved word\n", yytext); return UNTIL; }
+"decide" { printf("%s - reserved word\n", yytext); return DECIDE; }
+"then" { printf("%s - reserved word\n", yytext); return THEN; }
+"or" { printf("%s - reserved word\n", yytext); return OR; }
+"this" { printf("%s - reserved word\n", yytext); return THIS; }
+"is" { printf("%s - reserved word\n", yytext); return IS; }
+"good" { printf("%s - reserved word\n", yytext); return GOOD; }
+"that" { printf("%s - reserved word\n", yytext); return THAT; }
+"tells" { printf("%s - reserved word\n", yytext); return TELLS; }
+"you" { printf("%s - reserved word\n", yytext); return YOU; }
+"to" { printf("%s - reserved word\n", yytext); return TO; }
+"stop" { printf("%s - reserved word\n", yytext); return STOP; }
+"start" { printf("%s - reserved word\n", yytext); return START; }
+"working" { printf("%s - reserved word\n", yytext); return WORKING; }
+"with" { printf("%s - reserved word\n", yytext); return WITH; }
+"from" { printf("%s - reserved word\n", yytext); return FROM; }
+"going" { printf("%s - reserved word\n", yytext); return GOING; }
+"up" { printf("%s - reserved word\n", yytext); return UP; }
+"down" { printf("%s - reserved word\n", yytext); return DOWN; }
+"go" { printf("%s - reserved word\n", yytext); return GO; }
+"halt" { printf("%s - reserved word\n", yytext); return HALT; }
+"declare" { printf("%s - reserved word\n", yytext); return DECLARE; }
+
+
+"+" { printf("%s - operator\n", yytext); return PLUS; }
+"-" { printf("%s - operator\n", yytext); return MINUS; }
+"*" { printf("%s - operator\n", yytext); return TIMES; }
+"/" { printf("%s - operator\n", yytext); return DIV; }
+"<" { printf("%s - operator\n", yytext); return LESS; }
+"<=" { printf("%s - operator\n", yytext); return LESSEQUAL; }
+"=" { printf("%s - operator\n", yytext); return EQUAL; }
+">=" { printf("%s - operator\n", yytext); return BIGGEREQUAL; }
+"==" { printf("%s - operator\n", yytext); return DOUBLEEQUAL; }
+"!=" { printf("%s - operator\n", yytext); return NOTEQUAL; }
+">" { printf("%s - operator\n", yytext); return BIGGER; }
+
+"[" { printf("%s - separator\n", yytext); return OPENSQUARE; }
+"]" { printf("%s - separator\n", yytext); return CLOSESQUARE; }  
+"(" { printf("%s - separator\n", yytext); return OPENROUND; } 
+")" { printf("%s - separator\n", yytext); return CLOSEROUND; }
+
+
+{IDENTIFIER}		{printf("Identifier: %s\n", yytext); return IDENTIFIER;}
+{NUMBER_CONST}		{printf("Number: %s\n", yytext); return INTCONSTANT;}
+{STRING_CONST}		{printf("String: %s\n", yytext); return STRINGCONSTANT;}
+{CHAR_CONST}		{printf("Character: %s\n", yytext); return CHAR;}
+
+[ \t]+		{}
+[\n]+	{currentLine++;}
+
+[0-9][a-zA-Z0-9_]*		{printf("Illegal identifier at line %d\n", currentLine); exit(1);}
+[+|-]0		{printf("Illegal numeric constant at line %d\n", currentLine); exit(1);}
+[+|-]?[0][0-9]*([.][0-9]*)?		{printf("Illegal numeric constant at line %d\n", currentLine); exit(1);}
+[\'][a-zA-Z0-9 ]{2,}[\']|[\'][a-zA-Z0-9 ][a-zA-Z0-9 ][\']		{printf("Illegal character constant at line %d\n", currentLine); exit(1);}
+[~&$#@`] {printf("Illegal operator at line %d\n", currentLine); exit(1);}
+%%

@@ -1,206 +1,172 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#define YYDEBUG 1
 
-#define TIP_INT 1
-#define TIP_REAL 2
-#define TIP_CAR 3
+int yyerror(char *s);
 
-
+int yydebug = 1;
 %}
+%error-verbose
+%token PROGRAM;
+%token IDENTIFIER;
+%token INTCONSTANT;
+%token STRINGCONSTANT;
+%token CHAR;
+%token INT;
+%token STRING;
+%token CHAR;
+%token IF;
+%token ELSE;
+%token WHILE;
+%token CONST;
+%token DO;
+%token OF;
+%token READ;
+%token READNUMBER;
+%token THEN;
+%token VAR;
+%token WRITE;
+%token REPEAT;
+%token UNTIL;
+%token DECIDE;
+%token THEN;
+%token OR;
+%token THIS;
+%token IS;
+%token GOOD;
+%token THAT;
+%token TELLS;
+%token YOU;
+%token TO;
+%token STOP;
+%token START;
+%token WORKING;
+%token WITH;
+%token FROM;
+%token GOING;
+%token UP;
+%token DOWN;
+%token GO;
+%token HALT;
+%token DECLARE;
 
+%token PLUS;
+%token MINUS;
+%token TIMES;
+%token DIV;
 
-%token BEGINN
-%token CONST
-%token DO
-%token ELSE
-%token END
-%token IF
-%token PRINT
-%token PROGRAM
-%token READ
-%token THEN
-%token VAR
-%token WHILE
+%token LESS;
+%token LESSEQUAL;
+%token EQUAL;
+%token BIGGEREQUAL;
+%token DOUBLEEQUAL;
+%token NOTEQUAL;
+%token BIGGER;
+%token OPENSQUARE;
+%token CLOSESQUARE;
+%token OPENROUND;
+%token CLOSEROUND;
 
-%token ID
-%token <p_val> CONST_INT
-%token <p_val> CONST_REAL
-%token <p_val> CONST_CAR
-%token CONST_SIR
-
-%token CHAR
-%token INTEGER
-%token REAL
-
-%token ATRIB
-%token NE
-%token LE
-%token GE
-
-%left '+' '-'
-%left DIV MOD '*' '/'
-%left OR
-%left AND
-%left NOT
-
-%type <l_val> expr_stat factor_stat constanta
-%%
-prog_sursa:	PROGRAM ID ';' bloc '.'
-		;
-bloc:		sect_const sect_var instr_comp
-		;
-sect_const:	/* empty */
-		| CONST lista_const
-		;
-lista_const:	decl_const
-		| lista_const decl_const
-		;
-sect_var:	/* empty */
-		| VAR lista_var
-		;
-lista_var:	decl_var
-		| lista_var decl_var
-		;
-decl_const:	ID '=' {sp=0;} expr_stat ';'	{
-		printf("*** %d %g ***\n", $4);
-					}
-		;
-decl_var:	lista_id ':' tip ';'
-		;
-lista_id:	ID
-		| lista_id ',' ID
-		;
-tip:		tip_simplu
-		;
-tip_simplu:	INTEGER
-		| REAL
-		| CHAR
-		;
-expr_stat:	factor_stat
-		| expr_stat '+' expr_stat	{
-			if($1==TIP_REAL || $3==TIP_REAL) $$=TIP_REAL;
-			else if($1==TIP_CAR) $$=TIP_CAR;
-				else $$=TIP_INT;
-						}
-		| expr_stat '-' expr_stat	{
-			if($1==TIP_REAL || $3==TIP_REAL) $$=TIP_REAL;
-			else if($1==TIP_CAR) $$=TIP_CAR;
-				else $$=TIP_INT;
-						}
-		| expr_stat '*' expr_stat	{
-			if($1==TIP_REAL || $3==TIP_REAL) $$=TIP_REAL;
-			else if($1==TIP_CAR) $$=TIP_CAR;
-				else $$=TIP_INT;
-						}
-		| expr_stat '/' expr_stat	
-		| expr_stat DIV expr_stat
-		| expr_stat MOD expr_stat
-		;
-factor_stat:	ID		{}
-		| constanta
-		| '(' expr_stat ')'	{$$ = $2;}
-		;
-constanta:	CONST_INT	{
-			$$ = TIP_INT;
-				}
-		| CONST_REAL	{
-			$$ = TIP_REAL;
-				}
-		| CONST_CAR	{
-			$$ = TIP_CAR;
-				}
-		;
-instr_comp:	BEGINN lista_instr END
-		;
-lista_instr:	instr
-		| lista_instr ';' instr
-		;
-instr:		/* empty */
-		| instr_atrib
-		| instr_if
-		| instr_while
-		| instr_comp
-		| instr_read
-		| instr_print
-		;
-instr_atrib:	variabila ATRIB expresie
-		;
-variabila:	ID
-		| ID '[' expresie ']'
-		| ID '.' ID
-		;
-expresie:	factor
-		| expresie '+' expresie
-		| expresie '-' expresie
-		| expresie '*' expresie
-		| expresie '/' expresie
-		| expresie DIV expresie
-		| expresie MOD expresie
-		;
-factor:		ID
-		| constanta {}
-		| ID '(' lista_expr ')'
-		| '(' expresie ')'
-		| ID '[' expresie ']'
-		| ID '.' ID
-		;
-lista_expr:	expresie
-		| lista_expr ',' expresie
-		;
-instr_if:	IF conditie THEN instr ramura_else
-		;
-ramura_else:	/* empty */
-		ELSE instr
-		;
-conditie:	expr_logica
-		| expresie op_rel expresie
-		;
-expr_logica:	factor_logic
-		| expr_logica AND expr_logica
-		| expr_logica OR expr_logica
-		;
-factor_logic:	'(' conditie ')'
-		| NOT factor_logic
-		;
-op_rel:		'='
-		| '<'
-		| '>'
-		| NE
-		| LE
-		| GE
-		;
-instr_while:	WHILE conditie DO instr
-		;
-instr_print:	PRINT '(' lista_elem ')'
-		;
-lista_elem:	element
-		| lista_elem ',' element
-		;
-element:	expresie
-		| CONST_SIR
-		;
-instr_read:	READ '(' lista_variab ')'
-		;
-lista_variab:	variabila
-		| lista_variab ',' variabila
-		;
+%start Program
 
 %%
+Start: PROGRAM CompoundStatement {printf("Program ->  program CompoundStatement \n"); };
 
+CompoundStatement : GO CompoundStatement {printf("CompoundStatement -> go CompoundStatement\n"); }
+		  | HALT {printf("CompoundStatement -> halt ;\n");}
+		  | Statement CompoundStatement {printf("CompoundStatement -> Statement CompoundStatement ;\n");}
+		  ;
+
+Statement : DeclarationStatement {printf("Statement -> DeclarationStatement \n");}
+	|   AssignmentStatement {printf("Statement -> AssignmentStatement \n");}
+	|   IfStatement {printf("Statement -> IfStatement \n");}
+	|   WhileStatement {printf("Statement -> WhileStatement \n");}
+	|   ForStatement {printf("Statement -> ForStatement \n");}
+	|   RepeatStatement {printf("Statement -> ForStatement \n");}
+	|   IOStatement {printf("Statement -> IOStatement \n");}
+	;
+
+DeclarationStatement: DECLARE Type IDENTIFIER {printf("DeclarationStatement -> TYPE  IDENTIFIER\n");} 
+		      | DECLARE Type IDENTIFIER EQ Expression {printf("DeclarationStatement -> TYPE IDENTIFIER = Expression");}
+			;
+
+AssignmentStatement : IDENTIFIER EQ Expression {printf("AssignmentStatement -> IDENTIFIER = Expression\n");};
+
+Expression : Term {printf("Expression -> Term\n");}
+	|    Expression MathSymbol Term {printf("Expression -> Expression MathSymbol Term\n");}
+	|	 Expression MathSymbol Expression {printf("Expression -> Expression MathSymbol Expression");}
+	;
+
+Term : INTCONSTANT {printf("Term -> INTCONSTANT\n");}
+       |	IDENTIFIER {printf("Term -> IDENTIFIER\n");}
+       |	OPENROUND Expression CLOSEROUND {printf("Term -> ( Expression ) \n");}
+       ;
+	   
+MathSymbol : PLUS {printf("MathSymbol -> PLUS\n");}
+	|	MINUS {printf("MathSymbol -> MINUS\n");}
+	|	DIV {printf("MathSymbol -> MINUS\n");}
+	|	TIMES {printf("MathSymbol -> MINUS\n");}
+	;
+
+Type :    INT {printf("Type -> int\n");}
+	|	STRING {printf("Type -> string\n");}
+	|	CHAR {printf("Type -> char\n");}
+      ;
+
+IfStatement : DECIDE Relation THEN DO CompoundStatement {printf("IfStatement -> decide Relation then do CompoundStatement\n");}
+	| DECIDE Relation THEN DO CompoundStatement ELSE DO CompoundStatement {printf("IfStatement -> decide Relation then do CompoundStatement else do CompoundStatement");}
+	;
+
+WhileStatement : WHILE THIS IS GOOD Relation DO THAT CompoundStatement {printf("WhileStatement -> while this is good Relation do that CompoundStatement\n");};
+
+RepeatStatement : DO THIS CompoundStatement UNTIL THIS TELLS YOU TO STOP Relation {printf("RepeatStatement -> do this until this tells you to stop CompoundStatement\n");};
+
+ForStatement : START WORKING WITH THIS IDENTIFIER FROM THIS WorkingVariable TO THIS WorkingVariable GOING Direction CompoundStatement {printf("ForStatement -> Start working with this IDENTIFIER from this WorkingVariable to this WorkingVariable going Direction CompoundStatement\n");};
+
+WorkingVariable : IDENTIFIER {printf("WorkingVariable -> IDENTIFIER\n");}
+	|	INTCONSTANT {printf("WorkingVariable -> INTCONSTANT\n");}
+	;
+	
+Direction : UP {printf("Direction -> up\n");}
+	|	DOWN {printf("Direction -> down\n");}
+	;
+
+
+IOStatement : OutputStatement {printf("IOStatement -> OutputStatement\n");}
+	|	InputStatement {printf("IOStatement -> InputStatement\n");}
+	|	InputNumberStatement {printf("IOStatement -> InputNumberStatement\n");}
+	;
+	
+InputStatement : READ IDENTIFIER {printf("InputStatement -> read IDENTIFIER\n");};
+
+InputNumberStatement : READNUMBER IDENTIFIER {printf("InputNumberStatement -> readNumber IDENTIFIER\n");};
+
+OutputStatement : WRITE IDENTIFIER {printf("OutputStatement -> write IDENTIFIER\n");}
+
+
+
+
+Relation: Expression RelationSymbol Expression {printf("Condition -> Expression Relation Expression\n");};
+
+RelationSymbol: LESS {printf("Relation -> Less\n");}
+	| LESSEQUAL {printf("Relation -> LESS OR EQUAL\n");}
+	| DOUBLEEQUAL {printf("Relation -> EQUAL\n");}
+	| NOTEQUAL {printf("Relation -> NOT EQUAL\n");}
+	| BIGGEREQUAL {printf("Relation -> BIGGER OR EQUAL\n");}
+	| BIGGER {printf("Relation -> BIGGER\n");}
+	;
+	
+
+%%
 yyerror(char *s)
-{
-  printf("%s\n", s);
+{	
+	printf("%s\n",s);
 }
 
 extern FILE *yyin;
 
 main(int argc, char **argv)
 {
-  if(argc>1) yyin = fopen(argv[1], "r");
-  if((argc>2)&&(!strcmp(argv[2],"-d"))) yydebug = 1;
-  if(!yyparse()) fprintf(stderr,"\tO.K.\n");
-}
-
-
+	if(argc>1) yyin =  fopen(argv[1],"r");
+	if(!yyparse()) fprintf(stderr, "\tOK\n");
+} 
