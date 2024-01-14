@@ -6,7 +6,6 @@ int yyerror(char *s);
 
 int yydebug = 1;
 %}
-%error-verbose
 %token PROGRAM;
 %token IDENTIFIER;
 %token INTCONSTANT;
@@ -14,7 +13,6 @@ int yydebug = 1;
 %token CHAR;
 %token INT;
 %token STRING;
-%token CHAR;
 %token IF;
 %token ELSE;
 %token WHILE;
@@ -29,7 +27,6 @@ int yydebug = 1;
 %token REPEAT;
 %token UNTIL;
 %token DECIDE;
-%token THEN;
 %token OR;
 %token THIS;
 %token IS;
@@ -70,7 +67,7 @@ int yydebug = 1;
 %start Program
 
 %%
-Start: PROGRAM CompoundStatement {printf("Program ->  program CompoundStatement \n"); };
+Program: PROGRAM CompoundStatement {printf("Program ->  program CompoundStatement \n"); };
 
 CompoundStatement : GO CompoundStatement {printf("CompoundStatement -> go CompoundStatement\n"); }
 		  | HALT {printf("CompoundStatement -> halt ;\n");}
@@ -87,10 +84,10 @@ Statement : DeclarationStatement {printf("Statement -> DeclarationStatement \n")
 	;
 
 DeclarationStatement: DECLARE Type IDENTIFIER {printf("DeclarationStatement -> TYPE  IDENTIFIER\n");} 
-		      | DECLARE Type IDENTIFIER EQ Expression {printf("DeclarationStatement -> TYPE IDENTIFIER = Expression");}
+		      | DECLARE Type IDENTIFIER EQUAL Expression {printf("DeclarationStatement -> TYPE IDENTIFIER = Expression");}
 			;
 
-AssignmentStatement : IDENTIFIER EQ Expression {printf("AssignmentStatement -> IDENTIFIER = Expression\n");};
+AssignmentStatement : IDENTIFIER EQUAL Expression {printf("AssignmentStatement -> IDENTIFIER = Expression\n");};
 
 Expression : Term {printf("Expression -> Term\n");}
 	|    Expression MathSymbol Term {printf("Expression -> Expression MathSymbol Term\n");}
